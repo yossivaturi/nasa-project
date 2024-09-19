@@ -22,8 +22,8 @@ app.use(express.json());
 //to serve all of our public files -> after this we can only 'npm run server' from our root directory and both apps should be served
 app.use(express.static(path.join(__dirname, '..','public')));
 
-app.use(planetsRouter)
-app.use(launchesRouter);
+app.use('/planets', planetsRouter)
+app.use('/launches', launchesRouter);
 //we want to serve the index.html file in our root url -> '/'
 //index.html is the root of our React client app
 app.get('/*', (req, res) => {

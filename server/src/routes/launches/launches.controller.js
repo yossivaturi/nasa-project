@@ -1,5 +1,8 @@
 // const {launches} = require('../../models/launches.model');
-const {getAllLaunches} = require('../../models/launches.model');
+const {
+    getAllLaunches,
+    addNewLaunch
+} = require('../../models/launches.model');
 
 
 //The controller takes the data as it lives in the model 
@@ -14,9 +17,30 @@ function httpGetAllLaunches(req, res) {//Practice: every func that starts with h
     //It will be better to abstract this implementation detail away
     // return res.status(200).json(Array.from(launches.values()));
     return res.status(200).json(Array.from(getAllLaunches()));
+}
 
+function httpAddNewLaunch(req, res) {
+    const launch = req.body;
+
+    if(!launch.mission || !launch.rocket || !launch.launchDate
+         || !launch.destination){
+        return res.status(400).json({
+            error: "Missing required launch property",
+        });
+        }
+
+    launch.launchDate = new Date(launch.launchDate)
+    if(isNaN(launch.launchDate)) {
+        return res.status(400).json({
+            error: 'Invalid launch date',
+        });
+    }
+    addNewLaunch(launch);
+    //201 = Created
+    return res.status(201).json(launch);
 }
 
 module.exports = {
-    httpGetAllLaunches
+    httpGetAllLaunches,
+    httpAddNewLaunch
 }
